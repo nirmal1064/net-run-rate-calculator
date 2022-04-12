@@ -51,8 +51,8 @@ const calculateNRR = (
   runsAgainst: number,
   ballsAgainst: number
 ): number => {
-  const runRateFor = (runsFor / ballsFor) * 6;
-  const runRateAgainst = (runsAgainst / ballsAgainst) * 6;
+  const runRateFor = runsFor / ballsFor;
+  const runRateAgainst = runsAgainst / ballsAgainst;
   const nrr = runRateFor - runRateAgainst;
   return Number(nrr.toFixed(3));
 };
@@ -71,6 +71,7 @@ const getPoinstTableANew = (
   tie: boolean
 ): PointsTable => {
   return {
+    season: 2022,
     position: 0,
     teamId: team.id,
     teamName: team.name,
@@ -100,6 +101,7 @@ const getPointsTableBNew = (
   tie: boolean
 ): PointsTable => {
   return {
+    season: 2022,
     position: 0,
     teamId: teamB.id,
     teamName: teamB.name,
@@ -165,9 +167,9 @@ const getPointsTableB = (
   pointsTableB.oversAgainst += result.oversAFinal;
   pointsTableB.netRunRate = calculateNRR(
     pointsTableB.runsFor,
-    pointsTableB.oversFor,
+    pointsTableB.ballsFor,
     pointsTableB.runsAgainst,
-    pointsTableB.oversAgainst
+    pointsTableB.ballsAgainst
   );
 };
 

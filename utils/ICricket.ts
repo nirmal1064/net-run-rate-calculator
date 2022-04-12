@@ -5,6 +5,8 @@ export interface Team {
 }
 
 export interface Result {
+  season: number;
+  matchNumber: number;
   teamA: number;
   teamB: number;
   scoreA: number;
@@ -23,6 +25,7 @@ export interface Result {
 }
 
 export interface PointsTable {
+  season: number;
   position: number;
   teamId: number;
   teamName: string;
