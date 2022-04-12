@@ -1,0 +1,11 @@
+.teamstable {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+
+.teamstable td,
+.teamstable th {
+    border: 1px solid #999;
+    padding: 0.5rem;
+}
