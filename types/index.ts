@@ -6,6 +6,7 @@ type Props = {
   name: string;
   id: string;
   onChange?: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+  required?: boolean;
 };
 
 export type CheckBoxProps = Props & { className?: string };

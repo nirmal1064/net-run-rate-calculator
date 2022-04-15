@@ -9,6 +9,7 @@ const NumberInput: FC<NumberInputProps> = ({
   id,
   step,
   placeholder = "",
+  required = true,
   onChange
 }: NumberInputProps) => {
   return (
@@ -22,6 +23,7 @@ const NumberInput: FC<NumberInputProps> = ({
         id={id}
         placeholder={placeholder}
         onChange={onChange}
+        required={required}
       />
     </div>
   );

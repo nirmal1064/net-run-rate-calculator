@@ -7,14 +7,22 @@ const DropdownInput: FC<SelectProps> = ({
   name,
   id,
   options,
+  required = true,
   onChange
 }: SelectProps) => {
   return (
     <div className="form-group col-md-2">
       <label htmlFor={htmlFor}>{label}</label>
-      <select className="form-control" name={name} id={id} onChange={onChange}>
+      <select
+        className="form-control"
+        name={name}
+        id={id}
+        onChange={onChange}
+        required={required}>
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value === 0 ? "" : option.value}>
             {option.label}
           </option>
         ))}
