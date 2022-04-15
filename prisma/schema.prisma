@@ -7,8 +7,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model teams {
-  id       Int    @id
-  fullName String
-  name     String
+model Team {
+  id                        Int      @id
+  fullName                  String   @unique
+  name                      String   @unique
+  Result_Result_teamAToTeam Result[] @relation("Result_teamAToTeam")
+  Result_Result_teamBToTeam Result[] @relation("Result_teamBToTeam")
+}
+
+model Result {
+  season                  Int
+  matchNumber             Int
+  teamA                   Int
+  teamB                   Int
+  scoreA                  Int?
+  scoreB                  Int?
+  oversA                  Int?
+  oversB                  Int?
+  maxOversA               Int?
+  maxOversB               Int?
+  allOutA                 Boolean?
+  allOutB                 Boolean?
+  oversAFinal             Int?
+  oversBFinal             Int?
+  ballsAFinal             Int?
+  ballsBFinal             Int?
+  winner                  Int?
+  dlApplied               Boolean?
+  noResult                Boolean?
+  tie                     Boolean?
+  Team_Result_teamAToTeam Team     @relation("Result_teamAToTeam", fields: [teamA], references: [id], onDelete: Cascade, map: "teamA")
+  Team_Result_teamBToTeam Team     @relation("Result_teamBToTeam", fields: [teamB], references: [id], onDelete: Cascade, map: "teamB")
+
+  @@id([season, matchNumber], map: "pk")
 }
