@@ -1,4 +1,4 @@
-import { PointsTable, Result, Team } from "./ICricket";
+import type { PointsTable, Result, Team } from "../types";
 
 export const generatePointsTable = (
   teams: Team[],
@@ -6,14 +6,17 @@ export const generatePointsTable = (
   pointsTable: PointsTable[]
 ): PointsTable[] => {
   for (const result of results) {
+    if (result.noResult) {
+      continue;
+    }
     if (result.allOutA) {
       result.oversAFinal = result.maxOversA;
     }
     if (result.allOutB) {
       result.oversBFinal = result.maxOversB;
     }
-    result.ballsAFinal = calculateBalls(result.oversAFinal);
-    result.ballsBFinal = calculateBalls(result.oversBFinal);
+    result.ballsAFinal = convertOversToBalls(result.oversAFinal);
+    result.ballsBFinal = convertOversToBalls(result.oversBFinal);
     const tie =
       result.winner !== result.teamA && result.winner !== result.teamB;
     const teamA: Team = teams.find((team) => team.id === result.teamA)!;
@@ -35,7 +38,7 @@ export const generatePointsTable = (
   return pointsTable;
 };
 
-const calculateBalls = (overs: number): number => {
+const convertOversToBalls = (overs: number): number => {
   const split = overs.toString().split(".");
   if (split.length === 1) {
     return overs * 6;
@@ -43,6 +46,13 @@ const calculateBalls = (overs: number): number => {
     return parseInt(split[0]) * 6 + parseInt(split[1]);
   }
   return NaN;
+};
+
+const convertBallsToOvers = (balls: number): number => {
+  const completedOvers = Math.floor(balls / 6);
+  const ballsReamining = balls % 6;
+  const overs = completedOvers + ballsReamining * 0.1;
+  return Number(overs.toFixed(1));
 };
 
 const calculateNRR = (
@@ -53,7 +63,7 @@ const calculateNRR = (
 ): number => {
   const runRateFor = runsFor / ballsFor;
   const runRateAgainst = runsAgainst / ballsAgainst;
-  const nrr = runRateFor - runRateAgainst;
+  const nrr = (runRateFor - runRateAgainst) * 6;
   return Number(nrr.toFixed(3));
 };
 
@@ -137,10 +147,10 @@ const getPointsTableA = (
   pointsTableA.points += result.winner === result.teamA ? 2 : getPoints(tie);
   pointsTableA.runsFor += result.scoreA;
   pointsTableA.ballsFor += result.ballsAFinal;
-  pointsTableA.oversFor += result.oversAFinal;
+  pointsTableA.oversFor = convertBallsToOvers(pointsTableA.ballsFor);
   pointsTableA.runsAgainst += result.scoreB;
   pointsTableA.ballsAgainst += result.ballsBFinal;
-  pointsTableA.oversAgainst += result.oversBFinal;
+  pointsTableA.oversAgainst = convertBallsToOvers(pointsTableA.ballsAgainst);
   pointsTableA.netRunRate = calculateNRR(
     pointsTableA.runsFor,
     pointsTableA.ballsFor,
@@ -161,10 +171,10 @@ const getPointsTableB = (
   pointsTableB.points += result.winner === result.teamB ? 2 : getPoints(tie);
   pointsTableB.runsFor += result.scoreB;
   pointsTableB.ballsFor += result.ballsBFinal;
-  pointsTableB.oversFor += result.oversBFinal;
+  pointsTableB.oversFor = convertBallsToOvers(pointsTableB.ballsFor);
   pointsTableB.runsAgainst += result.scoreA;
   pointsTableB.ballsAgainst += result.ballsAFinal;
-  pointsTableB.oversAgainst += result.oversAFinal;
+  pointsTableB.oversAgainst = convertBallsToOvers(pointsTableB.ballsAgainst);
   pointsTableB.netRunRate = calculateNRR(
     pointsTableB.runsFor,
     pointsTableB.ballsFor,
