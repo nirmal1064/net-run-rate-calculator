@@ -1,21 +1,22 @@
 import type { FC } from "react";
-import type { InputProps } from "../types";
+import type { NumberInputProps } from "../types";
 
-const CustomInput: FC<InputProps> = ({
+const NumberInput: FC<NumberInputProps> = ({
   className = "form-group col-md-2",
   htmlFor,
   label,
-  type,
   name,
   id,
+  step,
   placeholder = "",
   onChange
-}: InputProps) => {
+}: NumberInputProps) => {
   return (
     <div className={className}>
       <label htmlFor={htmlFor}>{label}</label>
       <input
-        type={type}
+        type="number"
+        step={step}
         className="form-control"
         name={name}
         id={id}
@@ -26,4 +27,4 @@ const CustomInput: FC<InputProps> = ({
   );
 };
 
-export default CustomInput;
+export default NumberInput;

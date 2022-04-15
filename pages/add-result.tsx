@@ -1,9 +1,10 @@
 import type { NextPage } from "next";
 import { ChangeEvent, useState } from "react";
 import CheckBox from "../components/CheckBox";
-import CustomInput from "../components/CustomInput";
 import DropdownInput from "../components/DropdownInput";
-import { Result } from "../types";
+import NumberInput from "../components/NumberInput";
+import { iplTeams } from "../data/teams";
+import { Option, Result } from "../types";
 import { resultDefault } from "../utils";
 
 const AddResult: NextPage = () => {
@@ -15,7 +16,6 @@ const AddResult: NextPage = () => {
     const { value, name, type } = e.target;
     if (type === "checkbox") {
       const { checked } = e.target as HTMLInputElement;
-      console.log(checked);
       setForm({ ...form, [name]: checked });
     } else {
       setForm({ ...form, [name]: Number(value) });
@@ -27,6 +27,27 @@ const AddResult: NextPage = () => {
     console.log(form);
   };
 
+  const populateTeams = (): Option[] => {
+    const chooseTeam = { value: 0, label: "Choose.." };
+    const teams = iplTeams.map((team) => {
+      return { value: team.id, label: team.name };
+    });
+    return [chooseTeam, ...teams];
+  };
+
+  const populateWinnerDropdown = (): Option[] => {
+    const teamA = iplTeams.find((team) => team.id === form.teamA);
+    const teamB = iplTeams.find((team) => team.id === form.teamB);
+    if (teamA && teamB) {
+      return [
+        { value: 0, label: "Choose.." },
+        { value: teamA.id, label: teamA.name },
+        { value: teamB.id, label: teamB.name }
+      ];
+    }
+    return [];
+  };
+
   return (
     <div className="container">
       <form onSubmit={handleSubmit}>
@@ -36,31 +57,31 @@ const AddResult: NextPage = () => {
             id="teamA"
             name="teamA"
             label="TeamA"
-            options={[{ value: "1", label: "TeamA" }]}
+            options={populateTeams()}
             onChange={handleChange}
           />
-          <CustomInput
+          <NumberInput
             htmlFor="scoreA"
             label="Score"
-            type="number"
+            step={1}
             id="scoreA"
             name="scoreA"
             placeholder="Score"
             onChange={handleChange}
           />
-          <CustomInput
+          <NumberInput
             htmlFor="oversA"
             label="Overs"
-            type="number"
+            step={0.1}
             id="oversA"
             name="oversA"
             placeholder="Overs"
             onChange={handleChange}
           />
-          <CustomInput
+          <NumberInput
             htmlFor="maxOversA"
             label="Overs(Max)"
-            type="number"
+            step={1}
             id="maxOversA"
             name="maxOversA"
             placeholder="Overs(Max)"
@@ -80,31 +101,31 @@ const AddResult: NextPage = () => {
             id="teamB"
             name="teamB"
             label="TeamB"
-            options={[{ value: "2", label: "TeamB" }]}
+            options={populateTeams()}
             onChange={handleChange}
           />
-          <CustomInput
+          <NumberInput
             htmlFor="scoreB"
             label="Score"
-            type="number"
+            step={1}
             id="scoreB"
             name="scoreB"
             placeholder="Score"
             onChange={handleChange}
           />
-          <CustomInput
+          <NumberInput
             htmlFor="oversB"
             label="Overs"
-            type="number"
+            step={0.1}
             id="oversB"
             name="oversB"
             placeholder="Overs"
             onChange={handleChange}
           />
-          <CustomInput
+          <NumberInput
             htmlFor="maxOversB"
             label="Overs(Max)"
-            type="number"
+            step={1}
             id="maxOversB"
             name="maxOversB"
             placeholder="Overs(Max)"
@@ -124,16 +145,13 @@ const AddResult: NextPage = () => {
             label="Winner"
             name="winner"
             id="winner"
-            options={[
-              { value: "1", label: "TeamA" },
-              { value: "2", label: "TeamB" }
-            ]}
+            options={populateWinnerDropdown()}
             onChange={handleChange}
           />
-          <CustomInput
+          <NumberInput
             htmlFor="matchNumber"
             label="Match No."
-            type="number"
+            step={1}
             id="matchNumber"
             name="matchNumber"
             placeholder="Match Number"

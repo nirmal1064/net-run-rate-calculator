@@ -10,13 +10,13 @@ type Props = {
 
 export type CheckBoxProps = Props & { className?: string };
 
-export type InputProps = Props & {
+export type NumberInputProps = Props & {
+  step: number;
   className?: string;
-  type: string;
   placeholder?: string;
 };
 
-type Option = { value: string; label: string };
+export type Option = { value: number; label: string };
 
 export type SelectProps = Props & { options: Option[] };
 
