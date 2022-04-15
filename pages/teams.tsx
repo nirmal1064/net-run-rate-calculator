@@ -2,14 +2,14 @@ import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { prisma } from "../db";
 import styles from "../styles/Teams.module.css";
-import { Team } from "../utils/ICricket";
+import { Team } from "../types";
 
 interface Props {
   teams: Team[];
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const teams = await prisma.teams.findMany();
+  const teams = await prisma.team.findMany();
   return {
     props: { teams }
   };

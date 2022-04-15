@@ -3,8 +3,8 @@ import Head from "next/head";
 import { results } from "../data/results";
 import { iplTeams } from "../data/teams";
 import styles from "../styles/Teams.module.css";
+import { PointsTable } from "../types";
 import { generatePointsTable } from "../utils/calculator";
-import { PointsTable } from "../utils/ICricket";
 
 interface Props {
   pointsTable: PointsTable[];

@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.container}>
+    <div className="container">
       <Head>
         <title>Net Run Rate Calculator</title>
         <meta
@@ -13,12 +12,7 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1 className={styles.title}>IPL Teams Table</h1>
-        <table className={styles.main}>
-          <caption>2019 Fourth Quarter Report</caption>
-        </table>
-      </main>
+      <form></form>
     </div>
   );
 };
