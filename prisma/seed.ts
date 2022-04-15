@@ -3,7 +3,7 @@ import { iplTeams } from "../data/teams";
 const prisma = new PrismaClient();
 
 const main = async () => {
-  await prisma.teams.createMany({ data: iplTeams });
+  await prisma.team.createMany({ data: iplTeams });
 };
 
 main()
