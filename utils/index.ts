@@ -1,3 +1,6 @@
+import { iplTeams } from "../data/teams";
+import { Option } from "../types";
+
 export const resultDefault = {
   season: 2022,
   matchNumber: 0,
@@ -19,4 +22,10 @@ export const resultDefault = {
   dlApplied: false,
   noResult: false,
   tie: false
+};
+
+export const populateTeams = (): Option[] => {
+  return iplTeams.map((team) => {
+    return { value: team.id, label: team.name };
+  });
 };

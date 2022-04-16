@@ -1,14 +1,39 @@
+import {
+  Button,
+  Center,
+  Container,
+  FormControl,
+  HStack,
+  VStack
+} from "@chakra-ui/react";
 import type { NextPage } from "next";
+import Head from "next/head";
 import { ChangeEvent, useState } from "react";
-import CheckBox from "../components/CheckBox";
-import DropdownInput from "../components/DropdownInput";
-import NumberInput from "../components/NumberInput";
+import CustomNumberInput from "../components/CustomNumberInput";
+import CustomSelectInput from "../components/CustomSelectInput";
 import { iplTeams } from "../data/teams";
 import { Option, Result } from "../types";
 import { resultDefault } from "../utils";
 
 const AddResult: NextPage = () => {
   const [form, setForm] = useState<Result>(resultDefault);
+  const populateTeams = (): Option[] => {
+    return iplTeams.map((team) => {
+      return { value: team.id, label: team.name };
+    });
+  };
+
+  const populateWinnerDropdown = (): Option[] => {
+    const teamA = iplTeams.find((team) => team.id === form.teamA);
+    const teamB = iplTeams.find((team) => team.id === form.teamB);
+    if (teamA && teamB) {
+      return [
+        { value: teamA.id, label: teamA.name },
+        { value: teamB.id, label: teamB.name }
+      ];
+    }
+    return [];
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -27,170 +52,162 @@ const AddResult: NextPage = () => {
     console.log(form);
   };
 
-  const populateTeams = (): Option[] => {
-    const chooseTeam = { value: 0, label: "Choose.." };
-    const teams = iplTeams.map((team) => {
-      return { value: team.id, label: team.name };
-    });
-    return [chooseTeam, ...teams];
-  };
-
-  const populateWinnerDropdown = (): Option[] => {
-    const teamA = iplTeams.find((team) => team.id === form.teamA);
-    const teamB = iplTeams.find((team) => team.id === form.teamB);
-    if (teamA && teamB) {
-      return [
-        { value: 0, label: "Choose.." },
-        { value: teamA.id, label: teamA.name },
-        { value: teamB.id, label: teamB.name }
-      ];
-    }
-    return [];
+  const populateYesorNo = (): Option[] => {
+    return [
+      { value: 1, label: "Yes" },
+      { value: 0, label: "No" }
+    ];
   };
 
   return (
-    <div className="container">
+    <Container>
+      <Head>
+        <title>Net Run Rate Calculator</title>
+        <meta
+          name="description"
+          content="Calculate net run rate (NRR) in cricket"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <form onSubmit={handleSubmit}>
-        <div className="input-group justify-content-center">
-          <DropdownInput
-            htmlFor="teamA"
-            id="teamA"
-            name="teamA"
-            label="TeamA"
-            options={populateTeams()}
-            onChange={handleChange}
-          />
-          <NumberInput
-            htmlFor="scoreA"
-            label="Score"
-            step={1}
-            id="scoreA"
-            name="scoreA"
-            placeholder="Score"
-            onChange={handleChange}
-          />
-          <NumberInput
-            htmlFor="oversA"
-            label="Overs"
-            step={0.1}
-            id="oversA"
-            name="oversA"
-            placeholder="Overs"
-            onChange={handleChange}
-          />
-          <NumberInput
-            htmlFor="maxOversA"
-            label="Overs(Max)"
-            step={1}
-            id="maxOversA"
-            name="maxOversA"
-            placeholder="Overs(Max)"
-            onChange={handleChange}
-          />
-          <CheckBox
-            htmlFor="allOutA"
-            label="All Out"
-            id="allOutA"
-            name="allOutA"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="input-group justify-content-center">
-          <DropdownInput
-            htmlFor="teamB"
-            id="teamB"
-            name="teamB"
-            label="TeamB"
-            options={populateTeams()}
-            onChange={handleChange}
-          />
-          <NumberInput
-            htmlFor="scoreB"
-            label="Score"
-            step={1}
-            id="scoreB"
-            name="scoreB"
-            placeholder="Score"
-            onChange={handleChange}
-          />
-          <NumberInput
-            htmlFor="oversB"
-            label="Overs"
-            step={0.1}
-            id="oversB"
-            name="oversB"
-            placeholder="Overs"
-            onChange={handleChange}
-          />
-          <NumberInput
-            htmlFor="maxOversB"
-            label="Overs(Max)"
-            step={1}
-            id="maxOversB"
-            name="maxOversB"
-            placeholder="Overs(Max)"
-            onChange={handleChange}
-          />
-          <CheckBox
-            htmlFor="allOutB"
-            label="All Out"
-            id="allOutB"
-            name="allOutB"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="input-group justify-content-center">
-          <DropdownInput
-            htmlFor="winner"
-            label="Winner"
-            name="winner"
-            id="winner"
-            options={populateWinnerDropdown()}
-            onChange={handleChange}
-          />
-          <NumberInput
-            htmlFor="matchNumber"
-            label="Match No."
-            step={1}
-            id="matchNumber"
-            name="matchNumber"
-            placeholder="Match Number"
-            onChange={handleChange}
-          />
-          <CheckBox
-            className="form-group col-1 text-center"
-            htmlFor="dlApplied"
-            label="D/L"
-            id="dlApplied"
-            name="dlApplied"
-            onChange={handleChange}
-          />
-          <CheckBox
-            className="form-group col-md-1 text-center"
-            htmlFor="tie"
-            label="Tied"
-            id="tie"
-            name="tie"
-            onChange={handleChange}
-          />
-          <CheckBox
-            className="form-group col-md-1 text-center"
-            htmlFor="noResult"
-            label="N/R"
-            id="noResult"
-            name="noResult"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="input-group justify-content-center">
-          <div className="form-group col-md-2">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </div>
-        </div>
+        <VStack spacing={"4"}>
+          <HStack>
+            <CustomSelectInput
+              htmlFor="teamA"
+              id="teamA"
+              label="Team A"
+              placeholder="Choose..."
+              options={populateTeams()}
+              onChange={handleChange}
+            />
+            <CustomNumberInput
+              htmlFor="scoreA"
+              label="Score"
+              id="scoreA"
+              step={1}
+              onChange={handleChange}
+            />
+            <CustomNumberInput
+              htmlFor="oversA"
+              label="Overs"
+              id="oversA"
+              step={0.1}
+              onChange={handleChange}
+            />
+            <CustomNumberInput
+              htmlFor="maxOversA"
+              label="Overs(Max)"
+              id="maxOversA"
+              step={1}
+              onChange={handleChange}
+            />
+            <CustomSelectInput
+              htmlFor="allOutA"
+              id="allOutA"
+              label="All Out"
+              placeholder="Choose..."
+              options={populateYesorNo()}
+              onChange={handleChange}
+            />
+          </HStack>
+          <HStack>
+            <CustomSelectInput
+              htmlFor="teamB"
+              id="teamB"
+              label="Team B"
+              placeholder="Choose..."
+              options={populateTeams()}
+              onChange={handleChange}
+            />
+            <CustomNumberInput
+              htmlFor="scoreB"
+              label="Score"
+              id="scoreB"
+              step={1}
+              onChange={handleChange}
+            />
+            <CustomNumberInput
+              htmlFor="oversB"
+              label="Overs"
+              id="oversB"
+              step={0.1}
+              onChange={handleChange}
+            />
+            <CustomNumberInput
+              htmlFor="maxOversB"
+              label="Overs(Max)"
+              id="maxOversB"
+              step={1}
+              onChange={handleChange}
+            />
+            <CustomSelectInput
+              htmlFor="allOutB"
+              label="All Out"
+              placeholder="Choose..."
+              id="allOutB"
+              options={populateYesorNo()}
+              onChange={handleChange}
+            />
+          </HStack>
+          <HStack>
+            <CustomSelectInput
+              htmlFor="winner"
+              id="winner"
+              label="Winner"
+              placeholder="Select Winner"
+              options={populateWinnerDropdown()}
+              onChange={handleChange}
+            />
+            <CustomNumberInput
+              htmlFor="matchNumber"
+              label="Match No."
+              id="matchNumber"
+              step={1}
+              onChange={handleChange}
+            />
+            <CustomSelectInput
+              htmlFor="dlApplied"
+              id="dlApplied"
+              label="D/L"
+              placeholder="Choose..."
+              options={populateYesorNo()}
+              onChange={handleChange}
+            />
+            <CustomSelectInput
+              htmlFor="tie"
+              id="tie"
+              label="Tie"
+              placeholder="Choose..."
+              options={populateYesorNo()}
+              onChange={handleChange}
+            />
+            <CustomSelectInput
+              htmlFor="noResult"
+              id="noResult"
+              label="NR"
+              placeholder="Choose..."
+              options={populateYesorNo()}
+              onChange={handleChange}
+            />
+          </HStack>
+          <HStack>
+            <FormControl>
+              <Center>
+                <Button colorScheme="blue" type="submit">
+                  Submit
+                </Button>
+                {/* <ButtonGroup variant="solid" spacing="6">
+                <Button colorScheme="blue" type="submit">
+                  Submit
+                </Button>
+                <Button type="reset">Reset</Button>
+              </ButtonGroup> */}
+              </Center>
+            </FormControl>
+          </HStack>
+        </VStack>
       </form>
-    </div>
+    </Container>
   );
 };
 
